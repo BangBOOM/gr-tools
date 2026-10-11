@@ -1,0 +1,50 @@
+GR Firmware alternative license grant
+Copyright (C) 2026 BangBOOM and GR Tools contributors
+
+The authors grant the original code in the paths listed below under the
+GNU General Public License, version 2 only (GPL-2.0-only), as an alternative
+to the root AGPL-3.0-only grant:
+
+- apps/firmware/
+- packages/firmware-core/
+- packages/firmware-fit/
+- packages/firmware-checks/
+- packages/color-engine/
+- packages/host/
+- packages/style-contract/
+- packages/ui/
+- gr_firmware/
+- stylepack/
+- tools/
+- re/tools/
+- studio/color.py
+- studio/builtin_styles.py
+- studio/matrix_style.py
+- re/native_styles/
+
+This alternative also covers original documentation and build/install scripts
+needed to modify, build, and install those components. A recipient may select
+the GPL-2.0-only grant for that original work. The GPL-2.0 text is supplied at
+public/licenses/Unicorn-GPL-2.0.txt. That text applies to this grant as well as
+to the separately licensed Unicorn executor.
+
+GR Firmware uses this alternative for its original components and conveys
+its combination with Unicorn under GPL-2.0-only. Matching corresponding
+source and required notices must accompany distribution under GPL-2.0.
+The grant permits recipients to modify and redistribute the covered work
+under GPL-2.0; it adds no field-of-use restriction.
+
+Original GR Studio application code in apps/studio/, public/studio/, and the
+remaining studio/ application uses AGPL-3.0-only. Studio selects the AGPL grant
+for shared original components. This alternative does not change the license
+of the Studio application or make the whole repository GPL-2.0-only.
+
+This grant covers only original work whose authors have the right to license
+it. It does not relicense imported dependencies, Ricoh firmware, recovered
+factory data, reference LUTs/recipes, generated firmware images, or user
+content. Those materials retain their separate rights and terms. Directory
+membership does not override an upstream notice or the data boundaries in
+public/LICENSING.md. It grants no permission to redistribute camera material.
+
+The software is provided without warranty, to the extent permitted by law.
+See public/LICENSING.md for distribution boundaries and pending release gates.

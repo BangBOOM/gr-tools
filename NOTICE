@@ -1,0 +1,14 @@
+GR Tools
+Copyright (C) 2026 BangBOOM and GR Tools contributors
+
+Original project code and maintained documentation are licensed under the
+GNU Affero General Public License, version 3 only (AGPL-3.0-only).
+GR Firmware components also have the GPL-2.0-only alternative grant in
+FIRMWARE-LICENSE. Studio retains AGPL-3.0-only.
+You may redistribute and modify covered work under the applicable license.
+This work is provided without warranty, to the extent permitted by law.
+See LICENSE for the full terms and public/LICENSING.md for the scope.
+
+User-owned LUTs, Style configurations, and photos are not relicensed by using
+the tools. Third-party code, reference assets, and firmware-derived material
+retain their separate licensing and rights boundaries.

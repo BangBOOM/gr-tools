@@ -1,0 +1,36 @@
+{
+  "name": "gr-tools",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "assets": "node tools/prepare_web_assets.mjs",
+    "dev": "npm run assets && vite --host 127.0.0.1",
+    "build": "npm run assets && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check": "tsc --noEmit && tsc --noEmit -p apps/studio/editor",
+    "test:web": "node tools/test_web.mjs",
+    "deploy:check": "wrangler deploy --dry-run",
+    "test:unit": "node --test packages/style-contract/test/*.test.ts packages/host/test/*.test.ts packages/raw-web/tests/*.test.ts apps/studio/tests/*.test.ts apps/firmware/test/*.test.ts",
+    "test:firmware:web": "node tools/test_firmware_web.mjs",
+    "test:smoke": "node tools/smoke_web.mjs"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0",
+    "buffer": "6.0.3",
+    "fflate": "0.8.3",
+    "libraw-wasm": "1.6.0",
+    "lit-html": "3.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "playwright": "1.56.1",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "wrangler": "4.148.0"
+  }
+}

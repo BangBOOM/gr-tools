@@ -1,0 +1,6 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": { "allowJs": true, "checkJs": true, "strict": false },
+  "include": ["*.js", "*.ts", "../main.ts"],
+  "exclude": ["render.worker.js"]
+}

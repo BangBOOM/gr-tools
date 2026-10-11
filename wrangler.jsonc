@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "gr-tools",
+  "account_id": "71c71c3767f020d5069e3719add3d6b0",
+  "compatibility_date": "2026-10-08",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "gr.fireloop.xyz", "custom_domain": true }],
+  "assets": { "directory": "./dist" },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 0.01 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.01 }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "package": "@alexaltea/unicorn-js",
+  "version": "2.1.4",
+  "license": "GPL-2.0",
+  "repository": "https://github.com/AlexAltea/unicorn.js",
+  "source": "re/analysis/AV-independent-arm/package/dist/unicorn_arm.js",
+  "source_sha256": "13b0852dc0d9bdac7f25728913d57a496feee29b607388ac47d7e3344dec8422",
+  "distributed_sha256": "a9dafad730e722e6c177a6e49ea71dfa2421f57103ff4f20908b21fab5cee697",
+  "adaptations": [
+    "Disable Node filesystem branch; embedded WASM runs identically in browser and Node",
+    "Append ESM default export; no emulator or ARM instruction changes"
+  ]
+}

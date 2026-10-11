@@ -1,0 +1,134 @@
+[
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "solid",
+      "top_text": "GOLD",
+      "bottom_text": "200",
+      "top_color": "#757575",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "009749e40c284ffdcbaba48473359c9cf4ccfc209baff0d08a9018d0bb9ab6a6"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "solid",
+      "top_text": "GOLD",
+      "bottom_text": "",
+      "top_color": "#757575",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "833e62790a92c203727278b3677c14671231ac23ee2121db92c5ea3f84914ee4"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "solid",
+      "top_text": "GOLD",
+      "bottom_text": "200",
+      "top_color": "#767676",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "fb2cf58773f92a38f07644bcc7d70581488a15c5fd0538f58a3d6072d996f120"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "solid",
+      "top_text": "GOLD",
+      "bottom_text": "",
+      "top_color": "#767676",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "d42b4f59057a30581a3cf5d367d4cfee37b24f58239043ce5ce7640678a209e8"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "split",
+      "top_text": "GOLD",
+      "bottom_text": "200",
+      "top_color": "#757575",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "b4865d67b44c23f25950b0e82e661fd0507051194114083eebb17980b57a102c"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "split",
+      "top_text": "GOLD",
+      "bottom_text": "",
+      "top_color": "#757575",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "033b94de891371cd01e80fdc3538a9b2f5214011515d8d3ad35ff022bb399ddc"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "split",
+      "top_text": "GOLD",
+      "bottom_text": "200",
+      "top_color": "#767676",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "18c693af1b817891eb7e9a6fbd0002a59dc998404f717c294a719974e98b1c3f"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "split",
+      "top_text": "GOLD",
+      "bottom_text": "",
+      "top_color": "#767676",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "8b94a1d62e0f4cef8af51d078a92dd99f1acde1803d261e3a02040dbf0ff62b2"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "band",
+      "top_text": "GOLD",
+      "bottom_text": "200",
+      "top_color": "#757575",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "ebd200dd57117bc4d3d29c3d1bd166008971b3c4f643aa85f5fbae721c5a791d"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "band",
+      "top_text": "GOLD",
+      "bottom_text": "",
+      "top_color": "#757575",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "67ac531a808db243ac4a55214558106d16a63efa37665eddd23ff3b8e7439d57"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "band",
+      "top_text": "GOLD",
+      "bottom_text": "200",
+      "top_color": "#767676",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "ac39d9ffc2674ae914c173e92ce104df2b41a419694362b54093e666ebf4c72e"
+  },
+  {
+    "icon": {
+      "template": "film-label-v1",
+      "layout": "band",
+      "top_text": "GOLD",
+      "bottom_text": "",
+      "top_color": "#767676",
+      "bottom_color": "#422D28"
+    },
+    "sha256": "59485c22d9435c685f54f55c55f1d1fa14c365e007d76e298bd05e28e3117be1"
+  }
+]

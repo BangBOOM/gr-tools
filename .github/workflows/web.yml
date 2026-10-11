@@ -1,0 +1,33 @@
+name: Web contracts and static build
+on:
+  push:
+    paths: ['LICENSE', 'NOTICE', 'apps/**', 'packages/**', 'public/**', 'stylepack/**', 'tools/prepare_web_assets.mjs', 'tools/smoke_web.mjs', 'package*.json', 'tsconfig.json', 'vite.config.ts', 'wrangler.jsonc', 'index.html', '.github/workflows/web.yml']
+  pull_request:
+    paths: ['LICENSE', 'NOTICE', 'apps/**', 'packages/**', 'public/**', 'stylepack/**', 'tools/prepare_web_assets.mjs', 'tools/smoke_web.mjs', 'package*.json', 'tsconfig.json', 'vite.config.ts', 'wrangler.jsonc', 'index.html', '.github/workflows/web.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.16.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run test:unit
+      - run: node packages/firmware-fit/test/fit.test.ts
+      - run: node packages/firmware-fit/test/preview.test.ts
+      - run: node packages/firmware-fit/test/full_controls.ts
+      - run: node packages/firmware-core/test/preflight.ts
+      - run: npm run build
+      - run: npm run deploy:check
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+      - run: npm run test:smoke

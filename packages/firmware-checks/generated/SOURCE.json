@@ -1,0 +1,87 @@
+{
+  "files": {
+    "V9_guest_common": {
+      "source": "re/tools/V9_guest_common.cjs",
+      "source_sha256": "8f234c0bec5a7e001cfd69b1b2914bebe87a9990839fdad66051dec576970de5",
+      "generated_sha256": "be22e897280a5d04e5bad44b9f92ab2c7172f328fc1c73992a38582b88204a02"
+    },
+    "four49_curve65_arm": {
+      "source": "re/tools/four49_curve65_arm.cjs",
+      "source_sha256": "66d04d235952ea83fe6780bd425b6f3715d8c12601dbcae6c960c41d8f5c9c93",
+      "generated_sha256": "5dca4349230fb4c1afe2209fda2cb2fdb53b2d1131c9fe78705eeca4188b2bd9"
+    },
+    "V9_menu_arm": {
+      "source": "re/tools/V9_menu_arm.cjs",
+      "source_sha256": "b6f7870e05b909c0cf1d0633e050fe3f71f0349668370696d093245f6f23ea7d",
+      "generated_sha256": "dd027c446e0cf98fc4870345f7d852a511ba577602fb1f2009361f8f63042294"
+    },
+    "V9_text_guest": {
+      "source": "re/tools/V9_text_guest.cjs",
+      "source_sha256": "79e77a4b13b3a58c641635957d078ef73375db141f2ae87cddf4d0264ff9660b",
+      "generated_sha256": "f00753200c06dc1dcc558512f381e12e3dcff196102c6ce0e69330d67cca7521"
+    },
+    "V9_icon_arm": {
+      "source": "re/tools/V9_icon_arm.cjs",
+      "source_sha256": "82dd9abbdf93d28dc2ff0189b805e9a47faba220c1db0b551f53761702a9faa5",
+      "generated_sha256": "29ed6dfc9aa20e4b9181ea5ac6f18f442435eada9630f56cffb64057bb901d6e"
+    },
+    "V9_storage_guest": {
+      "source": "re/tools/V9_storage_guest.cjs",
+      "source_sha256": "fc54f1e8ca12d6df722ccdb40c0cc02527e040ebabab5e54b682226806f00cda",
+      "generated_sha256": "1db84501ea1f3835b48da746db026a33de81fb88e8fc5b71178ee0adca9aa684"
+    },
+    "V9_backend_arm": {
+      "source": "re/tools/V9_backend_arm.cjs",
+      "source_sha256": "d798efcf4307d571d97e8f5117705722a854c9f52a37b26b4bdc1a8664e5d7ae",
+      "generated_sha256": "a428aa80dca7a89d36720fd54efcd03c83201173e6adfe5b5d9f0fa853e43530"
+    },
+    "V9_raw_arm": {
+      "source": "re/tools/V9_raw_arm.cjs",
+      "source_sha256": "4df2b6c227191b5b6392715e74c5e0fde9c08152453c46b863845fb5c702048b",
+      "generated_sha256": "20b41f8d2898930586ad20abbe2a03272a29ec6f62f290444df17e5f2e01aa0c"
+    },
+    "V9_ui_detail_arm": {
+      "source": "re/tools/V9_ui_detail_arm.cjs",
+      "source_sha256": "f6642b3091b3037f416f861698c4b21d7b100c6f9c36de8e2a1c8bb816516095",
+      "generated_sha256": "6380cf8c1cb663e914998e1c512beaf2bbc38546a68e3194c361702d1c22a997"
+    },
+    "V9_1_capacity_arm": {
+      "source": "re/tools/V9_1_capacity_arm.cjs",
+      "source_sha256": "ffde0e7733aab5badc9b73b2b32735acdac0fc50212d0f1e24949e323abcc974",
+      "generated_sha256": "484a44ca4d058851eb38ab205e08f7ce20c1f9c365cbb3d9835cf1a0348b202c"
+    },
+    "V9_1_memory_arm": {
+      "source": "re/tools/V9_1_memory_arm.cjs",
+      "source_sha256": "12d348d9323158a26981da4f0dd92007fd98a771ecc19a57a98b30e1762a46dd",
+      "generated_sha256": "02e8dd2241171e555a1dae39c0c2507644bb59f1947da548bc0622f1c838c97e"
+    },
+    "V9_1_shared_pages_arm": {
+      "source": "re/tools/V9_1_shared_pages_arm.cjs",
+      "source_sha256": "9dd23624e7182eec8d8edb888ec1f9747a07952fde50082ce136ad6fac562f68",
+      "generated_sha256": "509a24c6ed64e55f10881bd1d53d4e99e00343bf5c9c5f8d47601be596198510"
+    },
+    "persistence_apdata13_probe": {
+      "source": "re/tools/persistence_apdata13_probe.cjs",
+      "source_sha256": "976872dfcedf79e95f998bae128761600ad183fa0b45892e019712dd7c33970b",
+      "generated_sha256": "f276c65224f126cc4d8d93b9050886df31fa32528f632dd783067468c3af674f"
+    },
+    "persistence_refresh_property_gate": {
+      "source": "re/tools/persistence_refresh_property_gate.mjs",
+      "source_sha256": "fe3e4a2f76945280d7068de1b2368d36a9b20d5340679dac2a403a9db94894d5",
+      "generated_sha256": "fe3e4a2f76945280d7068de1b2368d36a9b20d5340679dac2a403a9db94894d5"
+    }
+  },
+  "generator": "tools/export_web_platform.py",
+  "generator_sha256": "a7dcda4e2d481a27cc638d363088fd66dbb013fb4b85aa7af62f8b9502c0ddb1",
+  "adaptations": [
+    "Static ESM function wrapper; explicit returned async promise",
+    "Virtual readonly fixtures and in-memory JSON reports; exact Buffer/assert/SHA256 adapters",
+    "Final candidate ROM mapped directly; no candidate hook or module injection",
+    "Candidate fixture modules are already relocated and compared to raw_sha256; original source hashes independently pinned/read back",
+    "Recipe-dependent expected curves/pixels/UUID policy supplied by independently read-back candidate",
+    "Equal recipes allowed; every cache transition still compared with independent expected RGB",
+    "Backend setter control values expanded from0/4/8 to all0..8 (972 cases)",
+    "Sixteen joint gamma control corners use an independent original instruction-interpreter corpus (165 cases)",
+    "Prior UUID registry header rejection and explicit legacy reset policy checked"
+  ]
+}

@@ -1,0 +1,34 @@
+# Environments and caches
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+.env
+.env.*
+.dev.vars
+.codex/
+.agents/
+.aws/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+**/target/
+/.wrangler/
+
+# User-supplied official firmware, generated firmware, and photos stay outside Git.
+*.bin
+*.zip
+*.DNG
+*.dng
+*.JPG
+
+# Build outputs and local test evidence
+/dist/
+/artifacts/
+/apps/firmware/test/artifacts/
+/public/vendor/
+/public/licenses/GR-Tools-MIT.txt
+/public/licenses/GR-Tools-AGPL-3.0.txt
+/public/licenses/GR-Tools-NOTICE.txt
+/public/licenses/GR-Firmware-LICENSE.txt

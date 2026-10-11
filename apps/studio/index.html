@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171819">
+  <title>GR — Color Studio</title>
+  <link rel="stylesheet" href="./editor/style.css">
+  <link rel="stylesheet" href="../../packages/ui/theme.css">
+  <link rel="stylesheet" href="../../packages/ui/app-header.css">
+  <script type="module" src="./main.ts"></script>
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true"><defs> <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></symbol> <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"></path></symbol> <symbol id="i-undo" viewBox="0 0 24 24"><path d="m9 5-5 5 5 5M4 10h10a5 5 0 0 1 0 10"></path></symbol> <symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 5 5 5-5 5m5-5H10a5 5 0 0 0 0 10"></path></symbol> <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol> <symbol id="i-compare" viewBox="0 0 24 24"><path d="M12 3v18M8 6H4v12h4m8-12h4v12h-4"></path></symbol> <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"></path></symbol> <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"></path></symbol> <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4"></path></symbol> <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></symbol> <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8" cy="8" r="1.5"></circle><path d="m3 17 5-5 4 4 4-6 5 7"></path></symbol> <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7h.01"></path></symbol> <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2.6 7M3 4v7h7"></path></symbol> <symbol id="i-dropper" viewBox="0 0 24 24"><path d="m14 5 5 5M6 15l9-9 3 3-9 9-4 1 1-4Z"></path><path d="m16 6 2-2a2.1 2.1 0 0 1 3 3l-2 2M5 19l-2 2"></path></symbol> <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V5h6l2 2h10v13H3Z"></path></symbol> </defs></svg>
+  <!-- vite.config.ts fills this header from packages/ui/app-header.ts. -->
+  <header class="topbar app-header" data-tool="studio"></header>
+  <main class="workbench">
+    <section class="photo-column" aria-label="Photo preview">
+      <div class="stage-toolbar">
+        <div class="stage-heading">
+          <div class="stage-label"><span class="status-dot"></span><span id="photo-title">Photo</span></div>
+          <div class="history-actions" role="group" aria-label="Edit history"><button id="undo" class="icon-button" aria-label="Undo" title="Undo ⌘Z" disabled><svg><use href="#i-undo"></use></svg></button><button id="redo" class="icon-button" aria-label="Redo" title="Redo ⇧⌘Z" disabled><svg><use href="#i-redo"></use></svg></button></div>
+        </div>
+        <div class="stage-tools">
+          <div class="preview-modes" aria-label="Preview mode"><button id="mode-full" aria-pressed="false" title="Full creative look · sRGB">LUT</button><button id="mode-camera" aria-pressed="true" class="active" title="GR Preview · Fitted camera recipe, host model">GR</button></div>
+          <button id="add-photos" class="small-button"><svg><use href="#i-plus"></use></svg>Add DNG</button>
+          <button id="remove-photo" class="small-button" hidden>Remove</button>
+          <span class="divider"></span>
+          <button id="zoom" class="icon-button" aria-label="Zoom preview" title="Zoom / Fit"><svg><use href="#i-expand"></use></svg></button>
+          <button id="compare" class="small-button" title="Hold to view original · Space"><svg><use href="#i-compare"></use></svg><span>Hold to compare</span></button>
+        </div>
+      </div>
+      <div id="stage" class="stage" aria-busy="false">
+        <div id="empty-state" class="empty-state">
+          <div class="empty-art" aria-hidden="true"><svg><use href="#i-photo"></use></svg></div>
+          <h1>Open a DNG</h1>
+          <button id="choose-photo" class="primary-button empty-choose"><svg><use href="#i-plus"></use></svg>Choose DNG</button>
+          <p class="empty-drop-hint">or drop a DNG here</p>
+          <span class="file-hint">Your files stay on this device.</span>
+        </div>
+        <canvas id="preview" aria-label="Graded photo preview" hidden></canvas>
+        <div id="touch-photo-pin" class="touch-photo-pin" hidden aria-hidden="true"></div>
+        <div id="original-badge" class="original-badge" hidden>Original</div>
+        <div id="rendering" class="rendering" hidden><span class="spinner"></span>Updating preview</div>
+        <div id="raw-status" class="raw-status" role="status" hidden><span class="spinner"></span><span id="raw-status-text">Developing RAW</span></div>
+        <div id="drop-overlay" class="drop-overlay" hidden><svg><use href="#i-photo"></use></svg><span>Drop to open</span><small>DNG or style project · Processed locally</small></div>
+        <div id="light-photo-pin" class="touch-photo-pin" hidden aria-hidden="true"></div>
+      </div>
+      <div class="photo-meta"><span id="photo-meta"></span><span id="preview-note" title="Fitted GR III recipe (Q13 matrix, 65-node curves) on the developed DNG. Host camera model; not calibrated against camera JPEGs.">GR Preview · Updating</span></div>
+      <div id="photo-strip" class="photo-strip" hidden></div>
+    </section>
+    <aside class="adjustments" aria-label="Adjustment panel">
+      <div class="style-identity">
+        <div class="style-name-label">
+          <label for="look-name">Style name</label>
+          <div class="style-save-status"><span id="saved-indicator" class="saved-indicator" role="status">Not saved</span><button id="retry-save" class="subtle-button" hidden>Retry</button></div>
+        </div>
+        <div class="style-identity-row"><canvas id="style-identity-icon" width="32" height="32" aria-label="Current style icon"></canvas><input id="look-name" aria-label="Style name" value="Untitled Style" maxlength="48"><button id="modify-icon" class="modify-icon-button" aria-haspopup="dialog" aria-controls="icon-dialog">Modify</button></div>
+      </div>
+      <div class="adjustment-content">
+        <div class="panel-heading" hidden><div><p class="eyebrow">MAKE IT YOURS</p><h2>Color grading</h2></div></div>
+        <div class="current-look">
+          <span id="current-look">Original</span>
+          <small id="current-caption" hidden>Start from scratch</small>
+          <button id="reset" class="subtle-button">Reset</button>
+          <details class="inline-help">
+            <summary role="button" aria-label="Studio help" aria-expanded="false" title="Studio help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+            <div class="help-popover" role="note">
+              <p>Hold Space for original. Each drag can be undone. Photos are processed locally.</p>
+              <p>LUT shows all creative adjustments. GR shows the fitted camera recipe that the style bundle installs. Export a style bundle to build firmware in GR Firmware.</p>
+            </div>
+          </details>
+        </div>
+        <div class="control" id="context-amount">
+          <div class="control-heading"><label for="look-strength">Amount</label><button class="control-value" id="look-strength-value" aria-label="Reset overall Amount" title="Reset 100">100</button></div>
+          <div class="range-shell"><input type="range" id="look-strength" min="0" max="100" step="1" aria-label="Overall style Amount" value="100"></div>
+          <div class="range-labels" hidden><span>Original</span><span>Full style</span></div>
+          <details class="inline-help">
+            <summary role="button" aria-label="Amount  help" aria-expanded="false" title="Amount  help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+            <div class="help-popover" role="note"><p>Blend the final style with the original, including all starting look, light, and color adjustments.</p></div>
+          </details>
+        </div>
+        <div class="editor-tabs" role="tablist" aria-label="Editing tools"><button id="tab-style" role="tab" aria-selected="true" class="active" aria-controls="pane-style">Start</button><button id="tab-light" role="tab" aria-selected="false" aria-controls="pane-light">Light</button><button id="tab-matrix" role="tab" aria-selected="false" aria-controls="pane-matrix">Color</button><button id="tab-detail" role="tab" aria-selected="false" aria-controls="pane-detail" hidden>Fine Tune</button></div>
+        <button id="tab-raw" role="button" aria-selected="false" aria-controls="pane-raw" hidden class="flow-raw-button">RAW ↗</button>
+        <section id="pane-matrix" class="editor-pane" role="tabpanel" aria-labelledby="tab-matrix" hidden>
+          <div class="color-touch-title gesture-toolbar">
+            <button id="touch-pick" class="touch-pick-button" aria-pressed="false" disabled aria-label="Sample a color in the photo" title="Click or drag in the photo">
+              <svg aria-hidden="true"><use href="#i-dropper"></use></svg>
+              <span>Pick</span>
+            </button>
+            <button id="touch-reset" class="subtle-button gesture-reset" aria-label="Reset selected hue and saturation" title="Reset selected hue and saturation">
+              <svg aria-hidden="true"><use href="#i-reset"></use></svg>
+            </button>
+            <details class="inline-help">
+              <summary role="button" aria-label="Color tool help" aria-expanded="false" title="Color tool help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+              <div class="help-popover" role="note">
+                <p id="touch-hint" class="touch-hint" role="status">Move horizontally for hue, vertically for saturation. Similar colors change together; brightness is in Light.</p>
+              </div>
+            </details>
+          </div>
+          <div id="touch-colors" class="touch-colors" aria-label="Choose a color"><button data-touch-color="red" aria-label="Red gesture" style="--chip: #d56c6b;" aria-pressed="false" title="Red · Hue 0 · Saturation 0"></button><button data-touch-color="orange" aria-label="Orange gesture" style="--chip: #d49a69;" aria-pressed="false" title="Orange · Hue 0 · Saturation 0"></button><button data-touch-color="yellow" aria-label="Yellow gesture" style="--chip: #cdc179;" aria-pressed="false" title="Yellow · Hue 0 · Saturation 0"></button><button data-touch-color="green" aria-label="Green gesture" style="--chip: #7dba89;" aria-pressed="false" title="Green · Hue 0 · Saturation 0"></button><button data-touch-color="aqua" aria-label="Aqua gesture" style="--chip: #79c3bf;" aria-pressed="false" title="Cyan · Hue 0 · Saturation 0"></button><button data-touch-color="blue" aria-label="Blue gesture" style="--chip: #719fd0;" class="active" aria-pressed="true" title="Blue · Hue 0 · Saturation 0"></button><button data-touch-color="purple" aria-label="Purple gesture" style="--chip: #a587ce;" aria-pressed="false" title="Purple · Hue 0 · Saturation 0"></button><button data-touch-color="magenta" aria-label="Magenta gesture" style="--chip: #c482b1;" aria-pressed="false" title="Magenta · Hue 0 · Saturation 0"></button></div>
+          <div class="touch-selected"><span id="touch-color-dot" style="background: rgb(51, 89, 191);"></span><strong id="touch-color-name">Blue</strong><span id="touch-direction" class="sr-only">Original feel</span></div>
+          <p class="color-axis-caption">↔ Hue · ↕ Saturation</p>
+          <div class="touch-pad-wrap">
+            <span class="touch-top">More vivid</span>
+            <div id="touch-pad" class="touch-pad" role="slider" tabindex="0" aria-label="Color pad: horizontal hue, vertical saturation" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Blue, Hue 0, Saturation 0" style="--touch-left: hsl(210 52% 45%); --touch-center: hsl(240 52% 45%); --touch-right: hsl(270 52% 45%);">
+              <div class="touch-cross"></div>
+              <i class="touch-origin"></i>
+              <span id="touch-cursor" style="left: 50%; top: 50%;"></span>
+              <span id="touch-left">Cyan</span>
+              <span id="touch-right">Purple</span>
+            </div>
+            <span class="touch-bottom">Softer</span>
+          </div>
+          <button id="matrix-compare" class="matrix-compare" disabled aria-pressed="false" title="Hold to compare hue and saturation; brightness stays unchanged" aria-label="Hold to compare selected hue and saturation">
+            <svg aria-hidden="true"><use href="#i-compare"></use></svg>
+            <span>Compare</span>
+          </button>
+          <details id="selected-color-values" class="flow-disclosure context-tool">
+            <summary><span id="selected-color-title">Blue · Values</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+            <div class="flow-fine-body selected-values"><label>Hue<input type="number" min="-100" max="100" step="1" id="selected-hue" aria-label="Selected color Hue" value="0"></label><label>Saturation<input type="number" min="-100" max="100" step="1" id="selected-saturation" aria-label="Selected color Saturation" value="0"></label></div>
+          </details>
+          <button id="color-brightness-link" class="color-brightness-link">Blue brightness in Light →</button>
+          <details id="overall-color" class="flow-disclosure context-tool">
+            <summary>Overall color<svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+            <div class="flow-fine-body">
+              <h4 class="color-group-label">Warmth &amp; Tint</h4>
+              <div id="global-color-pad" class="global-color-pad" role="slider" tabindex="0" aria-label="Global color pad: horizontal warmth, vertical tint" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Warmth 0, Tint 0">
+                <div class="touch-cross"></div>
+                <span id="global-color-dot" style="left: 50%; top: 50%;"></span>
+                <span class="intent-left">Cool</span>
+                <span class="intent-right">Warm</span>
+                <span class="global-top">Magenta</span>
+                <span class="global-bottom">Green</span>
+              </div>
+              <details class="inline-help">
+                <summary role="button" aria-label="Global warmth help" aria-expanded="false" title="Global warmth help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+                <div class="help-popover" role="note"><p class="touch-hint">Change global style warmth. Adjust this RAW photo white balance separately in Development.</p></div>
+              </details>
+              <h4 class="color-group-label">Saturation</h4>
+              <div class="section-body">
+                <div class="control">
+                  <div class="control-heading"><label for="slider-saturation">Saturation</label><button class="control-value" id="value-saturation" title="Reset" aria-label="Reset Color intensity">0</button></div>
+                  <div class="range-shell"><span class="range-fill" id="fill-saturation" style="left: 50%; width: 0%;"></span><input type="range" id="slider-saturation" min="-100" max="100" value="0" step="1" aria-label="Color intensity"></div>
+                  <div class="range-labels"><span>Subtle</span><span>Rich</span></div>
+                </div>
+                <div class="control">
+                  <div class="control-heading"><label for="slider-vibrance">Vibrance</label><button class="control-value" id="value-vibrance" title="Reset" aria-label="Reset Vibrance">0</button></div>
+                  <div class="range-shell"><span class="range-fill" id="fill-vibrance" style="left: 50%; width: 0%;"></span><input type="range" id="slider-vibrance" min="-100" max="100" value="0" step="1" aria-label="Vibrance"></div>
+                  <div class="range-labels"><span>Subtle</span><span>Vivid</span></div>
+                </div>
+                <div id="film-color-controls">
+                  <div class="control">
+                    <div class="control-heading"><label for="film-chroma_compression">Chroma Compression</label><button class="control-value" id="film-chroma_compression-value" aria-label="Chroma compressionReset" title="Reset 0">0</button></div>
+                    <div class="range-shell"><input type="range" id="film-chroma_compression" min="0" max="100" step="1" value="0"></div>
+                    <div class="range-labels"><span>Preserve chroma</span><span>Soft compression</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="film-shadow_saturation">Shadows · Saturation</label><button class="control-value" id="film-shadow_saturation-value" aria-label="Shadow colorReset" title="Reset 0">0</button></div>
+                    <div class="range-shell"><input type="range" id="film-shadow_saturation" min="-100" max="100" step="1" value="0"></div>
+                    <div class="range-labels"><span>Subtle</span><span>Rich</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="film-midtone_saturation">Midtones · Saturation</label><button class="control-value" id="film-midtone_saturation-value" aria-label="Midtone colorReset" title="Reset 0">0</button></div>
+                    <div class="range-shell"><input type="range" id="film-midtone_saturation" min="-100" max="100" step="1" value="0"></div>
+                    <div class="range-labels"><span>Subtle</span><span>Rich</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="film-highlight_saturation">Highlights · Saturation</label><button class="control-value" id="film-highlight_saturation-value" aria-label="Highlight colorReset" title="Reset 0">0</button></div>
+                    <div class="range-shell"><input type="range" id="film-highlight_saturation" min="-100" max="100" step="1" value="0"></div>
+                    <div class="range-labels"><span>Subtle</span><span>Rich</span></div>
+                  </div>
+                </div>
+                <details class="inline-help">
+                  <summary role="button" aria-label="Chroma  help" aria-expanded="false" title="Film Response  help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+                  <div class="help-popover" role="note">
+                    <p class="tool-hint">Soften shadow and highlight colors and enrich midtones. Chroma compression gently restrains vivid colors while keeping grays neutral.<br>A creative color response, rather than a physical film model.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </details>
+          <details class="flow-disclosure context-tool">
+            <summary>Split toning<svg><use href="#i-chevron"></use></svg></summary>
+            <div class="section-body flow-fine-body">
+              <div id="grading-regions" class="segmented"><button data-region="shadows" class="active" aria-pressed="true">Shadows</button><button data-region="midtones" aria-pressed="false">Midtones</button><button data-region="highlights" aria-pressed="false">Highlights</button></div>
+              <div class="wheel-frame">
+                <div id="grading-wheel" class="grading-wheel" role="slider" tabindex="0" aria-label="Color wheel: horizontal hue, vertical saturation" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="shadows Hue 0, Saturation 0"><span id="grading-dot" class="pad-dot" style="left: 50%; top: 50%;"></span></div>
+              </div>
+              <div id="grading-controls">
+                <div class="control">
+                  <div class="control-heading"><label for="grading-hue">Hue</label><button class="control-value" id="grading-hue-value" aria-label="HueReset" title="Reset 0">0°</button></div>
+                  <div class="range-shell"><input type="range" id="grading-hue" min="0" max="360" step="1" value="0"></div>
+                  <div class="range-labels"><span>Red</span><span>Back to red</span></div>
+                </div>
+                <div class="control">
+                  <div class="control-heading"><label for="grading-saturation">Saturation</label><button class="control-value" id="grading-saturation-value" aria-label="SaturationReset" title="Reset 0">0</button></div>
+                  <div class="range-shell"><input type="range" id="grading-saturation" min="0" max="100" step="1" value="0"></div>
+                  <div class="range-labels"><span>Neutral</span><span>Saturated</span></div>
+                </div>
+                <div class="control">
+                  <div class="control-heading"><label for="grading-balance">Balance</label><button class="control-value" id="grading-balance-value" aria-label="Tonal balanceReset" title="Reset 0">0</button></div>
+                  <div class="range-shell"><input type="range" id="grading-balance" min="-100" max="100" step="1" value="0"></div>
+                  <div class="range-labels"><span>Toward shadows</span><span>Toward highlights</span></div>
+                </div>
+              </div>
+              <button id="reset-grading" class="subtle-button">Reset region</button>
+              <details class="inline-help">
+                <summary role="button" aria-label="Color Grading  help" aria-expanded="false" title="Color Grading  help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+                <div class="help-popover" role="note"><p class="tool-hint">Tint shadows, midtones and highlights. This applies to every color in each tone range.</p></div>
+              </details>
+            </div>
+          </details>
+          <details id="rgb-curves" class="flow-disclosure context-tool">
+            <summary><span>RGB Curves</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+            <div class="flow-fine-body"></div>
+          </details>
+          <details id="extra-matrix" class="flow-disclosure context-tool" hidden>
+            <summary><span>Additional adjustments · 0</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+            <div class="flow-fine-body"></div>
+          </details>
+        </section>
+        <section id="pane-style" class="editor-pane" role="tabpanel" aria-labelledby="tab-style">
+          <section class="looks-section" aria-label="Style library">
+            <div class="looks-header">
+              <div class="looks-tabs"><button id="tab-presets" class="look-tab active">Starting Styles</button><button id="tab-mine" class="look-tab">My Styles<span id="project-count"></span></button></div>
+              <button id="import-project" class="subtle-button"><svg><use href="#i-folder"></use></svg>Import style project</button>
+            </div>
+            <div id="preset-list" class="preset-list"><!-- vite.config.ts renders apps/studio/presets.ts cards here. --></div>
+            <div id="starting-navigation" class="starting-navigation" aria-label="Browse starting styles"><button id="starting-previous" class="icon-button" aria-label="Previous starting styles" aria-controls="preset-list" disabled><svg aria-hidden="true"><use href="#i-chevron"></use></svg></button><span id="starting-page-number">1 / 2</span><button id="starting-next" class="icon-button" aria-label="Next starting styles" aria-controls="preset-list"><svg aria-hidden="true"><use href="#i-chevron"></use></svg></button></div>
+            <div id="project-list" class="preset-list" hidden></div>
+          </section>
+        </section>
+        <section id="pane-light" class="editor-pane" role="tabpanel" aria-labelledby="tab-light" hidden>
+          <div class="color-touch-title gesture-toolbar">
+            <button id="light-pick" class="touch-pick-button" aria-pressed="false" disabled aria-label="Sample a color for brightness" title="Pick a color, then drag vertically for brightness">
+              <svg aria-hidden="true"><use href="#i-dropper"></use></svg>
+              <span>Pick</span>
+              <i class="pick-swatch"></i>
+            </button>
+            <span id="light-intent-name" class="sr-only">Shape Midtones</span>
+            <button id="light-intent-reset" class="subtle-button gesture-reset" aria-label="Reset selected tone range" title="Reset selected tone range">
+              <svg aria-hidden="true"><use href="#i-reset"></use></svg>
+            </button>
+            <details class="inline-help">
+              <summary role="button" aria-label="Light tool help" aria-expanded="false" title="Light tool help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+              <div class="help-popover" role="note">
+                <p id="light-hint" class="touch-hint">All colors: shape shadows, midtones, or highlights. Pick a color to adjust that color family instead.</p>
+              </div>
+            </details>
+          </div>
+          <div class="light-colors" role="group" aria-label="Light adjustment colors"><button data-light-color="all" class="light-scope-all active" aria-label="All colors" aria-pressed="true" title="All colors">All colors</button><button data-light-color="red" class="light-color-chip" aria-label="Red brightness" style="--chip: #d56c6b;" aria-pressed="false" title="Red brightness · 0"></button><button data-light-color="orange" class="light-color-chip" aria-label="Orange brightness" style="--chip: #d49a69;" aria-pressed="false" title="Orange brightness · 0"></button><button data-light-color="yellow" class="light-color-chip" aria-label="Yellow brightness" style="--chip: #cdc179;" aria-pressed="false" title="Yellow brightness · 0"></button><button data-light-color="green" class="light-color-chip" aria-label="Green brightness" style="--chip: #7dba89;" aria-pressed="false" title="Green brightness · 0"></button><button data-light-color="aqua" class="light-color-chip" aria-label="Cyan brightness" style="--chip: #79c3bf;" aria-pressed="false" title="Cyan brightness · 0"></button><button data-light-color="blue" class="light-color-chip" aria-label="Blue brightness" style="--chip: #719fd0;" aria-pressed="false" title="Blue brightness · 0"></button><button data-light-color="purple" class="light-color-chip" aria-label="Purple brightness" style="--chip: #a587ce;" aria-pressed="false" title="Purple brightness · 0"></button><button data-light-color="magenta" class="light-color-chip" aria-label="Magenta brightness" style="--chip: #c482b1;" aria-pressed="false" title="Magenta brightness · 0"></button></div>
+          <div id="light-global-tools">
+            <div class="light-zones"><button data-light-zone="shadows" aria-pressed="false" style="--light-zone-color: 46 46 46; --light-zone-ink: #fff;">Shadows</button><button data-light-zone="midtones" aria-pressed="true" style="--light-zone-color: 102 102 102; --light-zone-ink: #fff;" class="active">Midtones</button><button data-light-zone="highlights" aria-pressed="false" style="--light-zone-color: 184 184 184; --light-zone-ink: #17191b;">Highlights</button></div>
+            <div class="touch-pad-wrap">
+              <span class="touch-top">Brighten</span>
+              <div id="light-intent-pad" class="light-intent-pad" role="slider" tabindex="0" aria-label="Light pad: horizontal depth, vertical brightness" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Midtones, Original depth" style="--light-sample: 90 90 94;">
+                <div class="touch-cross"></div>
+                <span id="light-sample-label" hidden class="sr-only">All colors</span>
+                <span id="light-intent-dot" style="left: 50%; top: 50%;"></span>
+                <span class="intent-left">Soft</span>
+                <span class="intent-right">More depth</span>
+              </div>
+              <span class="touch-bottom">Darker</span>
+            </div>
+            <p id="coach-light" class="gesture-coach" hidden>↔ Depth · ↕ Brightness</p>
+          </div>
+          <div id="light-color-control" class="control" hidden>
+            <div class="control-heading"><label id="light-color-label" for="light-color-brightness">Color brightness</label><button id="light-color-value" class="control-value" title="Reset color brightness">0</button></div>
+            <div class="range-shell"><input id="light-color-brightness" type="range" min="-100" max="100" step="1" value="0"></div>
+            <div class="range-labels"><span>Darker</span><span>Brighter</span></div>
+            <p class="light-color-note">Other color settings stay applied.</p>
+          </div>
+          <section id="tone-curve" class="context-tool tone-curve-section">
+            <h3>Tone Curve <span>All colors</span></h3>
+            <div class="flow-fine-body">
+              <div class="section-body">
+                <div id="curve-channels" class="segmented" hidden><button data-channel="master" class="active" aria-pressed="true" hidden>RGB</button><button data-channel="red" aria-pressed="false" hidden>R</button><button data-channel="green" aria-pressed="false" hidden>G</button><button data-channel="blue" aria-pressed="false" hidden>B</button></div>
+                <svg id="curve-editor" viewBox="0 0 240 240" class="curve-editor" aria-label="Tone Curve Five-point curve editor" style="--curve-color: #e0ddcf;"><path class="curve-grid" d="M0 60H240M0 120H240M0 180H240M60 0V240M120 0V240M180 0V240"></path><path class="curve-diagonal" d="M0 240L240 0"></path><path id="curve-path" d="M6 234 L7.78125 232.21875 L9.5625 230.4375 L11.34375 228.65625 L13.125 226.875 L14.90625 225.09375 L16.6875 223.3125 L18.46875 221.53125 L20.25 219.75 L22.03125 217.96875 L23.8125 216.1875 L25.59375 214.40625 L27.375 212.625 L29.15625 210.84375 L30.9375 209.0625 L32.71875 207.28125 L34.5 205.5 L36.28125 203.71875 L38.0625 201.9375 L39.84375 200.15625 L41.625 198.375 L43.40625 196.59375 L45.1875 194.8125 L46.96875 193.03125 L48.75 191.25 L50.53125 189.46875 L52.3125 187.6875 L54.09375 185.90625 L55.875 184.125 L57.65625 182.34375 L59.4375 180.5625 L61.21875 178.78125 L63 177 L64.78125 175.21875 L66.5625 173.4375 L68.34375 171.65625 L70.125 169.875 L71.90625 168.09375 L73.6875 166.3125 L75.46875 164.53125 L77.25 162.75 L79.03125 160.96875 L80.8125 159.1875 L82.59375 157.40625 L84.375 155.625 L86.15625 153.84375 L87.9375 152.0625 L89.71875 150.28125 L91.5 148.5 L93.28125 146.71875 L95.0625 144.9375 L96.84375 143.15625 L98.625 141.375 L100.40625 139.59375 L102.1875 137.8125 L103.96875 136.03125 L105.75 134.25 L107.53125 132.46875 L109.3125 130.6875 L111.09375 128.90625 L112.875 127.125 L114.65625 125.34375 L116.4375 123.5625 L118.21875 121.78125 L120 120 L121.78125 118.21875 L123.5625 116.4375 L125.34375 114.65625 L127.125 112.875 L128.90625 111.09375 L130.6875 109.3125 L132.46875 107.53125 L134.25 105.75 L136.03125 103.96875 L137.8125 102.1875 L139.59375 100.40625 L141.375 98.625 L143.15625 96.84375 L144.9375 95.0625 L146.71875 93.28125 L148.5 91.5 L150.28125 89.71875 L152.0625 87.9375 L153.84375 86.15625 L155.625 84.375 L157.40625 82.59375 L159.1875 80.8125 L160.96875 79.03125 L162.75 77.25 L164.53125 75.46875 L166.3125 73.6875 L168.09375 71.90625 L169.875 70.125 L171.65625 68.34375 L173.4375 66.5625 L175.21875 64.78125 L177 63 L178.78125 61.21875 L180.5625 59.4375 L182.34375 57.65625 L184.125 55.875 L185.90625 54.09375 L187.6875 52.3125 L189.46875 50.53125 L191.25 48.75 L193.03125 46.96875 L194.8125 45.1875 L196.59375 43.40625 L198.375 41.625 L200.15625 39.84375 L201.9375 38.0625 L203.71875 36.28125 L205.5 34.5 L207.28125 32.71875 L209.0625 30.9375 L210.84375 29.15625 L212.625 27.375 L214.40625 25.59375 L216.1875 23.8125 L217.96875 22.03125 L219.75 20.25 L221.53125 18.46875 L223.3125 16.6875 L225.09375 14.90625 L226.875 13.125 L228.65625 11.34375 L230.4375 9.5625 L232.21875 7.78125 L234 6"></path><g id="curve-points"><circle r="6" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" data-index="0" cx="6" cy="234" aria-label="master curve point 1" aria-valuenow="0"></circle><circle r="6" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" data-index="1" cx="63" cy="177" aria-label="master curve point 2" aria-valuenow="25"></circle><circle r="6" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" data-index="2" cx="120" cy="120" aria-label="master curve point 3" aria-valuenow="50"></circle><circle r="6" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" data-index="3" cx="177" cy="63" aria-label="master curve point 4" aria-valuenow="75"></circle><circle r="6" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" data-index="4" cx="234" cy="6" aria-label="master curve point 5" aria-valuenow="100"></circle></g></svg>
+                <div class="curve-presets"><button data-curve="identity">Linear</button><button data-curve="soft">Soft</button><button data-curve="contrast">S Curve</button><button data-curve="matte">Matte</button></div>
+                <div class="curve-settings">
+                  <label class="raw-wb-label" for="curve-interpolation">Interpolation</label>
+                  <select id="curve-interpolation" class="raw-select"><option value="smooth" selected>Smooth</option><option value="linear">Linear</option></select>
+                  <details class="inline-help">
+                    <summary role="button" aria-label="Curve help" aria-expanded="false" title="Curves  help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+                    <div class="help-popover" role="note"><p class="tool-hint">Drag a point, or select it and press ↑ ↓.<br>Shadows on the left, highlights on the right.</p></div>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </section>
+          <details id="tone-response" class="flow-disclosure context-tool">
+            <summary><span>Highlights &amp; Blacks</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+            <div class="flow-fine-body">
+              <div class="control">
+                <div class="control-heading"><label for="film-highlight_softness">Highlight Rolloff</label><button class="control-value" id="film-highlight_softness-value" aria-label="Highlight softnessReset" title="Reset 0">0</button></div>
+                <div class="range-shell"><input type="range" id="film-highlight_softness" min="0" max="100" step="1" value="0"></div>
+                <div class="range-labels"><span>Original transitions</span><span>Softer</span></div>
+              </div>
+              <div class="control">
+                <div class="control-heading"><label for="slider-blacks">Black Point</label><button class="control-value" id="value-blacks" title="Reset" aria-label="Reset Blacks">0</button></div>
+                <div class="range-shell"><span class="range-fill" id="fill-blacks" style="left: 50%; width: 0%;"></span><input type="range" id="slider-blacks" min="-100" max="100" value="0" step="1" aria-label="Blacks"></div>
+                <div class="range-labels"><span>Darken</span><span>Brighten</span></div>
+              </div>
+            </div>
+          </details>
+          <details id="extra-light" class="flow-disclosure context-tool" hidden>
+            <summary><span>Additional adjustments · 0</span><svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+            <div class="flow-fine-body"></div>
+          </details>
+        </section>
+        <section id="pane-raw" class="editor-pane" role="tabpanel" aria-labelledby="tab-raw" hidden>
+          <div class="tool-title">
+            <span>RAW</span>
+            <button id="reset-raw" class="subtle-button">Reset to camera settings</button>
+            <details class="inline-help">
+              <summary role="button" aria-label="RAW Development help" aria-expanded="false" title="RAW Development help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+              <div class="help-popover" role="note">
+                <p id="raw-info" class="raw-info"></p>
+                <p class="tool-hint">These settings affect this photo; styles can be reused on other photos.<br>Adjust exposure and white balance before choosing a style. Temperature is an offset from the camera setting.<br><br>RAW Development settings are saved with the project. Exported LUTs apply to developed sRGB and exclude photo-specific exposure and white balance.</p>
+                <p class="raw-camera-note">LibRaw development differs from GR in-camera Standard. Create styles here and evaluate in-camera results in Firmware.</p>
+              </div>
+            </details>
+          </div>
+          <p class="raw-scope">This photo only · Excluded from LUT</p>
+          <div class="control">
+            <div class="control-heading"><label for="raw-exposure">Exposure</label><button id="raw-exposure-value" class="control-value" title="Reset">0 EV</button></div>
+            <div class="range-shell"><input id="raw-exposure" type="range" min="-2" max="3" step="0.1" value="0"></div>
+            <div class="range-labels"><span>−2 EV</span><span>+3 EV</span></div>
+          </div>
+          <label class="raw-wb-label" for="raw-wb">WB</label>
+          <select id="raw-wb" class="raw-select"><option value="camera" selected>As Shot</option><option value="auto">Auto</option><option value="custom">Custom</option></select>
+          <div id="raw-wb-controls">
+            <div class="control">
+              <div class="control-heading"><label for="raw-temperature">Temperature</label><button id="raw-temperature-value" class="control-value" title="Reset">0</button></div>
+              <div class="range-shell"><input id="raw-temperature" type="range" min="-100" max="100" step="1" value="0"></div>
+              <div class="range-labels"><span>Cooler</span><span>Warmer</span></div>
+            </div>
+            <div class="control">
+              <div class="control-heading"><label for="raw-tint">Tint</label><button id="raw-tint-value" class="control-value" title="Reset">0</button></div>
+              <div class="range-shell"><input id="raw-tint" type="range" min="-100" max="100" step="1" value="0"></div>
+              <div class="range-labels"><span>Greener</span><span>More magenta</span></div>
+            </div>
+          </div>
+        </section>
+        <div id="fit-summary" class="fit-summary" hidden></div>
+        <!-- Hidden legacy controls (palette, Film Response, HSL, Fine Tune). Sync code still writes to them; they have no visible UI. -->
+        <details id="flow-fine" class="flow-disclosure" hidden aria-hidden="true">
+          <summary>Fine Tune<svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+          <div class="flow-fine-body">
+            <details class="flow-disclosure">
+              <summary>Tone &amp; Color<svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+              <div class="flow-fine-body">
+                <div id="basic-controls" class="controls">
+                  <div class="control">
+                    <div class="control-heading"><label for="slider-brightness">Brightness</label><button class="control-value" id="value-brightness" title="Reset" aria-label="Reset Brightness">0</button></div>
+                    <div class="range-shell"><span class="range-fill" id="fill-brightness" style="left: 50%; width: 0%;"></span><input type="range" id="slider-brightness" min="-100" max="100" value="0" step="1" aria-label="Brightness"></div>
+                    <div class="range-labels"><span>Darker</span><span>Brighter</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="slider-contrast">Contrast</label><button class="control-value" id="value-contrast" title="Reset" aria-label="Reset Contrast">0</button></div>
+                    <div class="range-shell"><span class="range-fill" id="fill-contrast" style="left: 50%; width: 0%;"></span><input type="range" id="slider-contrast" min="-100" max="100" value="0" step="1" aria-label="Contrast"></div>
+                    <div class="range-labels"><span>Soft</span><span>Stronger</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="slider-tint">Tint</label><button class="control-value" id="value-tint" title="Reset" aria-label="Reset Tone">0</button></div>
+                    <div class="range-shell"><span class="range-fill" id="fill-tint" style="left: 50%; width: 0%;"></span><input type="range" id="slider-tint" min="-100" max="100" value="0" step="1" aria-label="Tone"></div>
+                    <div class="range-labels"><span>Greener</span><span>More magenta</span></div>
+                  </div>
+                </div>
+                <details class="fine-details" open>
+                  <summary>Light and depth<svg><use href="#i-chevron"></use></svg></summary>
+                  <div id="fine-controls" class="controls">
+                    <div class="control">
+                      <div class="control-heading"><label for="slider-shadows">Shadows</label><button class="control-value" id="value-shadows" title="Reset" aria-label="Reset Shadows">0</button></div>
+                      <div class="range-shell"><span class="range-fill" id="fill-shadows" style="left: 50%; width: 0%;"></span><input type="range" id="slider-shadows" min="-100" max="100" value="0" step="1" aria-label="Shadows"></div>
+                      <div class="range-labels"><span>Deeper</span><span>Lighter</span></div>
+                    </div>
+                    <div class="control">
+                      <div class="control-heading"><label for="slider-highlights">Highlights</label><button class="control-value" id="value-highlights" title="Reset" aria-label="Reset Highlights">0</button></div>
+                      <div class="range-shell"><span class="range-fill" id="fill-highlights" style="left: 50%; width: 0%;"></span><input type="range" id="slider-highlights" min="-100" max="100" value="0" step="1" aria-label="Highlights"></div>
+                      <div class="range-labels"><span>Less</span><span>Brighter</span></div>
+                    </div>
+                    <div class="control">
+                      <div class="control-heading"><label for="slider-whites">Whites</label><button class="control-value" id="value-whites" title="Reset" aria-label="Reset Whites">0</button></div>
+                      <div class="range-shell"><span class="range-fill" id="fill-whites" style="left: 50%; width: 0%;"></span><input type="range" id="slider-whites" min="-100" max="100" value="0" step="1" aria-label="Whites"></div>
+                      <div class="range-labels"><span>Less</span><span>Brighter</span></div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </details>
+            <section id="pane-detail" class="editor-pane">
+              <details class="advanced-section"><summary>Film Response<svg><use href="#i-chevron"></use></svg></summary></details>
+              <details class="advanced-section" hidden><summary>Curves<svg><use href="#i-chevron"></use></svg></summary></details>
+              <details class="advanced-section" hidden>
+                <summary>HSL<svg><use href="#i-chevron"></use></svg></summary>
+                <div class="section-body">
+                  <div id="mixer-colors" class="color-chips"><button data-mix="red" title="Red" aria-label="Red mix" style="--chip: #d56c6b;" class="active" aria-pressed="true"></button><button data-mix="orange" title="Orange" aria-label="Orange mix" style="--chip: #d49a69;" aria-pressed="false"></button><button data-mix="yellow" title="Yellow" aria-label="Yellow mix" style="--chip: #cdc179;" aria-pressed="false"></button><button data-mix="green" title="Green" aria-label="Green mix" style="--chip: #7dba89;" aria-pressed="false"></button><button data-mix="aqua" title="Aqua" aria-label="Aqua mix" style="--chip: #79c3bf;" aria-pressed="false"></button><button data-mix="blue" title="Blue" aria-label="Blue mix" style="--chip: #719fd0;" aria-pressed="false"></button><button data-mix="purple" title="Purple" aria-label="Purple mix" style="--chip: #a587ce;" aria-pressed="false"></button><button data-mix="magenta" title="Magenta" aria-label="Magenta mix" style="--chip: #c482b1;" aria-pressed="false"></button></div>
+                  <div class="tool-title"><span id="mixer-label">Red</span><button id="reset-mixer" class="subtle-button">Reset color</button></div>
+                  <div id="mixer-controls">
+                    <div class="control">
+                      <div class="control-heading"><label for="mixer-hue">Hue</label><button class="control-value" id="mixer-hue-value" aria-label="HueReset" title="Reset 0">0</button></div>
+                      <div class="range-shell"><input type="range" id="mixer-hue" min="-100" max="100" step="1" value="0"></div>
+                      <div class="range-labels"><span>Shift toward adjacent color</span><span>Shift toward adjacent color</span></div>
+                    </div>
+                    <div class="control">
+                      <div class="control-heading"><label for="mixer-saturation">Saturation</label><button class="control-value" id="mixer-saturation-value" aria-label="SaturationReset" title="Reset 0">0</button></div>
+                      <div class="range-shell"><input type="range" id="mixer-saturation" min="-100" max="100" step="1" value="0"></div>
+                      <div class="range-labels"><span>Less saturated</span><span>More saturated</span></div>
+                    </div>
+                    <div class="control">
+                      <div class="control-heading"><label for="mixer-luminance">Luminance</label><button class="control-value" id="mixer-luminance-value" aria-label="LuminanceReset" title="Reset 0">0</button></div>
+                      <div class="range-shell"><input type="range" id="mixer-luminance" min="-100" max="100" step="1" value="0"></div>
+                      <div class="range-labels"><span>Darker</span><span>Brighter</span></div>
+                    </div>
+                  </div>
+                  <details class="inline-help">
+                    <summary role="button" aria-label="HSL  help" aria-expanded="false" title="HSL  help"><svg aria-hidden="true"><use href="#i-info"></use></svg></summary>
+                    <div class="help-popover" role="note"><p class="tool-hint">Adjust a color group without changing global warmth.</p></div>
+                  </details>
+                </div>
+              </details>
+            </section>
+            <details class="flow-disclosure">
+              <summary>Palette<svg aria-hidden="true"><use href="#i-chevron"></use></svg></summary>
+              <div class="flow-fine-body">
+                <div class="tool-title"><span>Style palette</span><button id="reset-style" class="subtle-button">Reset to center</button></div>
+                <div id="style-palettes" class="palette-list" aria-label="Global color cast"><button data-palette="neutral" class="active" aria-pressed="true"><i style="background: rgb(150, 152, 139);"></i><span>Neutral</span></button><button data-palette="amber" aria-pressed="false"><i style="background: rgb(192, 155, 100);"></i><span>Amber</span></button><button data-palette="rose" aria-pressed="false"><i style="background: rgb(184, 135, 144);"></i><span>Rose</span></button><button data-palette="jade" aria-pressed="false"><i style="background: rgb(114, 152, 144);"></i><span>Jade</span></button><button data-palette="silver" aria-pressed="false"><i style="background: rgb(153, 160, 176);"></i><span>Silver</span></button></div>
+                <div class="pad-frame">
+                  <span class="pad-top">Clear</span>
+                  <div id="style-pad" class="style-pad" role="slider" tabindex="0" aria-label="Style pad: horizontal color, vertical tone" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Tone 0, Color 0" style="--palette: #96988b;">
+                    <div class="pad-grid"></div>
+                    <span id="style-dot" class="pad-dot" style="left: 50%; top: 50%;"></span>
+                    <span class="pad-left">Subtle</span>
+                    <span class="pad-right">Vivid</span>
+                  </div>
+                  <span class="pad-bottom">Rich</span>
+                </div>
+                <div class="pad-values"><label>Tone <input id="style-tone" type="number" min="-100" max="100" value="0" aria-label="Style tone"></label><label>Color <input id="style-color" type="number" min="-100" max="100" value="0" aria-label="Style color"></label></div>
+                <div id="style-controls">
+                  <div class="control">
+                    <div class="control-heading"><label for="slider-warmth">Warmth</label><button class="control-value" id="value-warmth" title="Reset" aria-label="Reset Warmth">0</button></div>
+                    <div class="range-shell"><span class="range-fill" id="fill-warmth" style="left: 50%; width: 0%;"></span><input type="range" id="slider-warmth" min="-100" max="100" value="0" step="1" aria-label="Warmth"></div>
+                    <div class="range-labels"><span>Cooler</span><span>Warmer</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="film-shadow_depth">Shadow Depth</label><button class="control-value" id="film-shadow_depth-value" aria-label="Shadow depthReset" title="Reset 0">0</button></div>
+                    <div class="range-shell"><input type="range" id="film-shadow_depth" min="-100" max="100" step="1" value="0"></div>
+                    <div class="range-labels"><span>Open shadows</span><span>Darker</span></div>
+                  </div>
+                  <div class="control">
+                    <div class="control-heading"><label for="slider-fade">Fade</label><button class="control-value" id="value-fade" title="Reset" aria-label="Reset Fade">0</button></div>
+                    <div class="range-shell"><span class="range-fill" id="fill-fade" style="left: 50%; width: 0%;"></span><input type="range" id="slider-fade" min="-100" max="100" value="0" step="1" aria-label="Fade"></div>
+                    <div class="range-labels"><span>Deep blacks</span><span>Matte</span></div>
+                  </div>
+                </div>
+                <details class="fine-details">
+                  <summary>Palette intensity<svg><use href="#i-chevron"></use></svg></summary>
+                  <div id="palette-controls">
+                    <div class="control">
+                      <div class="control-heading"><label for="style-intensity">Color cast and palette intensity</label><button class="control-value" id="style-intensity-value" aria-label="Color cast and palette intensityReset" title="Reset 100">100</button></div>
+                      <div class="range-shell"><input type="range" id="style-intensity" min="0" max="100" step="1" value="100"></div>
+                      <div class="range-labels"><span>Lighter</span><span>Full</span></div>
+                    </div>
+                  </div>
+                </details>
+                <p class="tool-hint">Explore six controls to shape your look.<br>Highlight softness changes transitions; it cannot recover clipped detail.</p>
+              </div>
+            </details>
+          </div>
+        </details>
+        <div class="panel-foot"><span class="foot-line"></span><small>Hold Space for original · Each drag can be undone</small></div>
+      </div>
+      <div class="studio-actions" aria-label="Style actions"><button id="export" class="primary-button">Export<svg><use href="#i-arrow"></use></svg></button></div>
+    </aside>
+  </main>
+  <input id="photo-input" type="file" accept=".dng,image/x-adobe-dng" multiple hidden>
+  <input id="project-input" type="file" accept=".grstyle.json,.json,application/json" hidden>
+  <button id="cancel-raw" class="subtle-button" hidden>Cancel RAW task</button>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="icon-dialog" class="modal film-label-modal" aria-labelledby="icon-dialog-title">
+    <button class="close-dialog icon-button" aria-label="Close"><svg><use href="#i-close"></use></svg></button>
+    <div class="film-label-heading"><h2 id="icon-dialog-title">Film label</h2><span>32 × 32</span></div>
+    <form id="icon-form">
+      <fieldset class="film-label-layout">
+        <legend class="field-label">Layout</legend>
+        <div class="ui-segmented"><label><input type="radio" name="icon-layout" value="solid"><span>Solid</span></label><label><input type="radio" name="icon-layout" value="split" checked><span>Two-tone</span></label><label><input type="radio" name="icon-layout" value="band"><span>Band</span></label></div>
+      </fieldset>
+      <div class="film-label-editor">
+        <div class="film-label-previews">
+          <canvas id="style-icon" width="32" height="32" aria-label="Magnified film label"></canvas>
+          <div class="film-label-native"><canvas id="style-icon-native" width="32" height="32" aria-label="Film label at actual size"></canvas><span>Actual size</span></div>
+        </div>
+        <div class="film-label-fields">
+          <label class="field-label" for="style-icon-top">Top line</label>
+          <div class="film-label-line"><input id="style-icon-top" class="name-field" maxlength="4" pattern="[A-Z0-9]{1,4}" required value=""><input id="style-icon-top-color" type="color" aria-label="Top background color" value="#e8b640"></div>
+          <label class="field-label" for="style-icon-bottom">Bottom line</label>
+          <div class="film-label-line"><input id="style-icon-bottom" class="name-field" maxlength="4" pattern="[A-Z0-9]{0,4}" value=""><input id="style-icon-bottom-color" type="color" aria-label="Bottom background color" value="#422d28"></div>
+          <span class="film-label-contrast">Text contrast · Auto</span>
+        </div>
+      </div>
+      <p id="style-icon-error" class="film-label-error" role="alert" hidden></p>
+      <div class="modal-actions"><button type="button" class="close-dialog text-button">Cancel</button><button id="confirm-icon" type="submit" class="primary-button">Done</button></div>
+    </form>
+  </dialog>
+  <dialog id="export-dialog" class="modal export-modal">
+    <button class="close-dialog icon-button" aria-label="Close"><svg><use href="#i-close"></use></svg></button>
+    <h2>Export</h2>
+    <label class="field-label" for="export-name">Style name</label>
+    <input id="export-name" class="name-field" aria-label="Export style name" maxlength="48" value="Untitled Style">
+    <div class="export-options"> <button id="download-package" class="export-option export-firmware"><span class="option-icon">GR</span><span><strong>Style for Firmware</strong><small>Prepare a GR recipe, review, then export .grstyle.</small></span><svg><use href="#i-arrow"></use></svg></button> </div>
+    <section id="camera-review" class="camera-review" hidden aria-labelledby="camera-review-title">
+      <h3 id="camera-review-title">GR camera recipe</h3>
+      <p id="camera-review-status" class="export-hint" role="status"></p>
+      <progress id="camera-review-progress" aria-label="Preparing camera recipe" hidden></progress>
+      <div id="camera-review-previews" class="camera-review-previews" hidden>
+        <figure><canvas id="camera-review-authored" width="160" height="104"></canvas><figcaption>Authored LUT</figcaption></figure>
+        <figure><canvas id="camera-review-native" width="160" height="104"></canvas><figcaption>Camera approximation</figcaption></figure>
+      </div>
+      <dl id="camera-review-metrics" class="camera-review-metrics" hidden></dl>
+      <p id="camera-review-note" class="export-hint" hidden>Host-model approximation. Review the error before exporting; this is not a real-camera measurement.</p>
+      <details id="camera-review-details" hidden><summary>Recipe &amp; fit report</summary><pre id="camera-review-report"></pre></details>
+      <button id="camera-review-download" class="primary-button" hidden>Download style<svg><use href="#i-download"></use></svg></button>
+      <button id="camera-review-cancel" class="text-button" hidden>Cancel preparation</button>
+    </section>
+    <section class="export-photo" aria-labelledby="export-photo-title">
+      <h3 id="export-photo-title">Photo</h3>
+      <p id="export-photo-hint" class="export-hint" role="status">Add a DNG to export a photo.</p>
+      <fieldset id="photo-export-fields" disabled aria-label="Photo export">
+        <div class="export-photo-settings">
+          <fieldset class="export-setting">
+            <legend>Format</legend>
+            <div class="ui-segmented"><label><input type="radio" name="export-photo-format" value="jpeg" checked><span>JPEG</span></label><label><input type="radio" name="export-photo-format" value="png"><span>PNG</span></label></div>
+          </fieldset>
+          <fieldset class="export-setting">
+            <legend>Size</legend>
+            <div class="ui-segmented"><label><input type="radio" name="export-photo-size" value="full" checked><span>Full size</span></label><label><input type="radio" name="export-photo-size" value="preview"><span>Preview</span></label></div>
+          </fieldset>
+        </div>
+        <button id="download-photo" class="primary-button">Export photo<svg><use href="#i-download"></use></svg></button>
+      </fieldset>
+    </section>
+  </dialog>
+  <div id="connection-error" class="connection-error" hidden><span>App initialization failed.</span><button id="retry" class="text-button">Retry</button></div>
+</body>
+</html>

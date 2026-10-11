@@ -1,0 +1,42 @@
+[
+  {
+    "name": "gold",
+    "icon": {
+      "template": "text-border-v1",
+      "text": "G200",
+      "border_color": "#E5B828"
+    },
+    "rgba_file": "gold.rgba",
+    "sha256": "6475e0daf731286dc3aa35cffe2be765dacfa2528a8ea1d42d4033e44e2b3ed5"
+  },
+  {
+    "name": "tungsten",
+    "icon": {
+      "template": "text-border-v1",
+      "text": "T800",
+      "border_color": "#38ADB8"
+    },
+    "rgba_file": "tungsten.rgba",
+    "sha256": "86000e049f74c0b28f49927c4597dda5f30faf4e2bc9a721e0cd4b7a4aab46b8"
+  },
+  {
+    "name": "ektar",
+    "icon": {
+      "template": "text-border-v1",
+      "text": "E100",
+      "border_color": "#D96147"
+    },
+    "rgba_file": "ektar.rgba",
+    "sha256": "d012d39a62bdb6430bf6ef1add42422029b2e9c8fd874ab914959b7fbf961469"
+  },
+  {
+    "name": "metropolis",
+    "icon": {
+      "template": "text-border-v1",
+      "text": "MTRO",
+      "border_color": "#92A3AA"
+    },
+    "rgba_file": "metropolis.rgba",
+    "sha256": "63dab547d7cf4b006ab73029a35db3ae550cf90475c30bd83ae9f4c90ab0c069"
+  }
+]

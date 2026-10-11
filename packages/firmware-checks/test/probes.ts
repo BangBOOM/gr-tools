@@ -1,0 +1,10 @@
+import { readFile } from 'node:fs/promises';
+import {decodeIndependent} from '../../firmware-core/src/decoder.ts';
+import { runReferenceChecks } from '../src/index.ts';
+const root = new URL('../../../',import.meta.url);
+const source = decodeIndependent(new Uint8Array(await readFile(new URL('fwdc239b.bin',root)))).payload;
+const platform = JSON.parse(await readFile(new URL('packages/firmware-core/platform/platform.json',root),'utf8'));
+const names = process.argv.slice(2);
+const results = await runReferenceChecks(source,platform,{names:names.length ? names : undefined,onProgress(name,result){console.log(name,result?.status ?? 'RUNNING');}});
+for (const r of results) console.log(JSON.stringify({name:r.name,status:r.status,error:r.error,milliseconds:r.milliseconds}));
+if (results.some(x=>x.status !== 'PASS')) process.exitCode=1;

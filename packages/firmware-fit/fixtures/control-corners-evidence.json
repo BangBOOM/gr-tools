@@ -1,0 +1,18 @@
+{
+  "schema": "gr-native-gamma-corner-evidence/v1",
+  "source_sha256": "53da690797f35ad6dc2c429d8ca1d0de8e333c211ed959816813982cd093b703",
+  "model_sha256": "442b0531d9084596247107b4b7cc06c776e172dec35a22f00f748e531fb5c321",
+  "interpreter_sha256": "2adc7b1447184c242559290335f32c92e2e6cd31faa10c60afd39f0c1985782f",
+  "scalar_sha256": "eaed6ba7fcee7cdc2dd008f9c9cf746253da89929ca7e92d31aa317dceefd406",
+  "corpus_sha256": "cbc1042f6288b1dc3e0e025bb971b6d6877af214de0ab1eaa30e622f0f108974",
+  "exposure": 8832,
+  "flag": 0,
+  "key_order": [
+    "key",
+    "contrast",
+    "highlight",
+    "shadow"
+  ],
+  "cases": 16,
+  "scope": "256 Q14 outputs from bounded independent instruction interpretation of pinned original native routine; not Unicorn/browser execution or camera validation"
+}

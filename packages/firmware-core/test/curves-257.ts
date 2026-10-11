@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {decodeIndependent} from '../src/decoder.ts';
+import {customSelection} from './selection.ts';
+import {createCandidate} from '../src/candidate.ts';
+import {verifyCandidateReadback} from '../src/readback.ts';
+import {runCandidateCurveChecks,runReferenceChecks} from '../../firmware-checks/src/index.ts';
+const root=new URL('../../../',import.meta.url),source=decodeIndependent(new Uint8Array(await readFile(new URL('fwdc239b.bin',root)))).payload,platform=JSON.parse(await readFile(new URL('packages/firmware-core/platform/platform.json',root),'utf8'));
+const candidate=await createCandidate(source,platform,await customSelection(257));
+assert.equal(candidate.slots[0].recipe.curves_q14[0].length,257);
+assert.equal(verifyCandidateReadback(source,candidate.beforeChecksum,platform,candidate).status,'PASS');
+assert.equal((await runCandidateCurveChecks(candidate)).fullDomainInputs,196620);
+const checks=await runReferenceChecks(source,platform,{candidate,finalPayload:candidate.beforeChecksum,names:['V9_backend_arm']});assert.equal(checks[0].status,'PASS',checks[0].error);
+console.log('PASS: explicitly fitted 257-node custom target readback, twelve full-domain native curves and integrated ARM backend');

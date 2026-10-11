@@ -1,0 +1,31 @@
+/* Both tools use the same navigation geometry and material. */
+.topbar.app-header {
+  height: var(--ui-header-height);
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--ui-line);
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: var(--ui-font);
+}
+.app-header .header-context { display:flex; align-items:center; min-width:0; }
+.app-header .brand { display:flex; align-items:baseline; gap:7px; flex:0 0 auto; text-decoration:none; color:var(--ui-text); }
+.app-header .brand-mark { font-size:22px; font-weight:650; letter-spacing:-.7px; line-height:1.2; }
+.app-header .brand-name { border:0; padding:0; color:var(--ui-secondary); font-size:13px; font-weight:500; letter-spacing:normal; line-height:1.4; }
+.app-header .tool-nav { display:flex; gap:2px; margin:0; padding:3px; background:var(--ui-raised); border:0; border-radius:10px; flex-shrink:0; }
+.app-header .tool-nav a { display:flex; align-items:center; justify-content:center; gap:8px; min-height:32px; min-width:118px; padding:0 15px; border:0; border-radius:7px; color:var(--ui-secondary); font-size:13px; font-weight:500; line-height:18px; text-decoration:none; transition:background .15s,color .15s; }
+.app-header .tool-nav a:hover { color:var(--ui-text); }
+.app-header .tool-nav a[aria-current=page] { background:var(--ui-selection); color:var(--ui-text); box-shadow:0 1px 3px #0003; }
+.app-header .tool-nav svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.app-header .tool-nav circle { fill:var(--ui-raised); }
+.app-header .tool-nav a[aria-current=page] circle { fill:var(--ui-selection); }
+.app-header a:focus-visible { outline:2px solid var(--ui-tint); outline-offset:4px; }
+@media(max-width:1050px) { .topbar.app-header { padding:0 20px; gap:20px; } }
+@media(max-width:720px) { .topbar.app-header { padding:0 16px; gap:12px; } .app-header .brand-name { display:none; } .app-header .tool-nav a { min-width:0; padding:0 12px; gap:6px; } }
+@media(max-width:390px) { .topbar.app-header { padding:0 12px; gap:8px; } .app-header .tool-nav svg { display:none; } .app-header .tool-nav a { padding:0 13px; } }
+@media(max-width:360px) { .topbar.app-header { padding:0 10px; gap:6px; } .app-header .tool-nav a { padding:0 11px; font-size:12px; } }
+@media(prefers-reduced-motion:reduce) { .app-header .tool-nav a { transition:none; } }

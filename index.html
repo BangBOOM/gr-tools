@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GR Tools</title>
+  <link rel="stylesheet" href="./packages/ui/theme.css">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--ui-bg);color:var(--ui-text);font:15px/1.6 var(--ui-font);-webkit-font-smoothing:antialiased}
+    main{max-width:800px;min-height:100dvh;margin:auto;padding:48px 32px;display:flex;flex-direction:column;justify-content:center}
+    h1{font-size:34px;font-weight:650;letter-spacing:-.8px;line-height:1.2;margin:0 0 12px}
+    .intro{color:var(--ui-secondary);font-size:17px;margin:0 0 32px}
+    .tools{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .tool{display:block;padding:24px;border:1px solid var(--ui-line);border-radius:16px;background:var(--ui-surface);color:var(--ui-text);text-decoration:none;transition:background .15s}
+    .tool:hover{background:var(--ui-raised)}
+    h2{display:flex;justify-content:space-between;align-items:center;font-size:19px;font-weight:600;margin:0 0 12px}
+    h2 span{color:var(--ui-secondary);font-size:16px;font-weight:400}
+    .tool p{font-size:14px;color:var(--ui-secondary);margin:0;line-height:1.6}
+    footer{margin-top:28px;color:var(--ui-secondary);font-size:12px;line-height:1.8}
+    footer a{color:var(--ui-tint);text-decoration:none}
+    a:focus-visible{outline:2px solid var(--ui-tint);outline-offset:4px}
+    @media(max-width:640px){main{padding:32px 24px}.tools{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){.tool{transition:none}}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>GR Tools</h1>
+    <p class="intro">Color styles for your GR.</p>
+    <div class="tools">
+      <a class="tool" href="/apps/studio/"><h2>Studio<span aria-hidden="true">↗</span></h2><p>Develop a DNG, create a style, and export it for Firmware.</p></a>
+      <a class="tool" href="/apps/firmware/"><h2>Firmware<span aria-hidden="true">↗</span></h2><p>Arrange your styles and build an update from an official base.</p></a>
+    </div>
+    <footer>Your files are processed on this device.<br>Independent project · <a href="/legal.html">Legal &amp; licenses</a></footer>
+  </main>
+</body>
+</html>

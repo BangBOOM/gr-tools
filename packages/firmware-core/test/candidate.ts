@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { createCandidate } from '../src/candidate.ts';
+import { verifyCandidateReadback } from '../src/readback.ts';
+import {customSelection} from './selection.ts';
+import { additiveSum, decodeIndependent } from '../src/decoder.ts';
+import { runReferenceChecks } from '../../firmware-checks/src/index.ts';
+const root=new URL('../../../',import.meta.url),platform=JSON.parse(await readFile(new URL('packages/firmware-core/platform/platform.json',root),'utf8'));
+const source=decodeIndependent(new Uint8Array(await readFile(new URL('fwdc239b.bin',root)))).payload;
+const selection=await customSelection();
+const candidate=await createCandidate(source,platform,selection);
+console.log(JSON.stringify(candidate.report));
+console.log(JSON.stringify(verifyCandidateReadback(source,candidate.beforeChecksum,platform,candidate)));
+for(const at of [0x10870+0xd50,0x10870+0x2080,0x500000,source.length-8]){const bad=candidate.beforeChecksum.slice();bad[at]^=1;assert.throws(()=>verifyCandidateReadback(source,bad,platform,candidate));}
+const finalPayload=candidate.beforeChecksum.slice();
+new DataView(finalPayload.buffer).setUint32(finalPayload.length-4,-additiveSum(finalPayload.subarray(0,finalPayload.length-4))>>>0,true);
+verifyCandidateReadback(source,finalPayload,platform,candidate);
+const reports=await runReferenceChecks(source,platform,{candidate,version:'V9.2',finalPayload,names:process.argv.length>2?process.argv.slice(2):undefined,onProgress(name,result){console.log(name,result?.status??'RUNNING');}});
+console.log(JSON.stringify(reports.map(({name,status,error,milliseconds})=>({name,status,error,milliseconds})),null,2));
+if(process.argv.length===2)assert.equal(reports.length,13);
+assert(reports.every(r=>r.status==='PASS'));

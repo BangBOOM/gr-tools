@@ -1,0 +1,28 @@
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+The contents of this directory are licensed under CC BY-SA 4.0. This is NOT the
+MIT license that covers the rest of this repository.
+
+  The authoritative notice is SPEKTRAFILM_LICENSE.txt, shipped verbatim
+  alongside this file. Read that, not this.
+
+`kodak_gold_200.png` is baked from spektrafilm's `kodak_gold_200` profile, by
+Andrea Volpato (<https://github.com/andreavolpato/spektrafilm>). spektrafilm's
+license treats a LUT as a direct encoding of its profile data, so the profile's
+license comes with it — including the requirement that this notice travel with
+every copy and every derivative.
+
+This file does not restate, summarise or interpret that grant. An earlier
+version of it did, and a summary of someone else's license is not their license:
+it omitted terms they wrote deliberately, among them a trademark restriction on
+the spektrafilm name, a request regarding commercial AI training, and the fact
+that removing attribution terminates the grant outright.
+
+  Verbatim upstream notice:  SPEKTRAFILM_LICENSE.txt (in this directory)
+  CC BY-SA 4.0 legal code:   https://creativecommons.org/licenses/by-sa/4.0/legalcode
+  Human-readable summary:    https://creativecommons.org/licenses/by-sa/4.0/
+
+For what was changed in the bake, why this directory is a license carve-out, and
+Film Lab's own reading of what share-alike does and does not reach, see
+ATTRIBUTION.md. That reading is Film Lab's, and is not part of anyone else's
+license grant.

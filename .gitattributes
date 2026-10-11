@@ -1,0 +1,7 @@
+# Preserve verbatim upstream notices, generated output, and unified diff context.
+distribution/native/unicorn-arm/*.patch whitespace=-blank-at-eol
+packages/raw-web/runtime/source-build-2026-10-09/index.d.ts whitespace=-blank-at-eol
+public/licenses/LibRaw-COPYRIGHT.txt whitespace=-blank-at-eol,-blank-at-eof
+public/licenses/emscripten/LICENSE.txt whitespace=-blank-at-eol,-blank-at-eof
+public/licenses/unicorn-runtime/Emscripten.txt whitespace=-blank-at-eol,-blank-at-eof
+public/licenses/unicorn-runtime/musl-and-dlmalloc-additional.txt whitespace=-blank-at-eol,-blank-at-eof

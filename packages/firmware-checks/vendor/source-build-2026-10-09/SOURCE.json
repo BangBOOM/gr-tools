@@ -1,0 +1,21 @@
+{
+  "schema": "gr-unicorn-source-build/v1",
+  "license": "GPL-2.0-only",
+  "wrapper_revision": "560284c59c11c8d6c94d537f4354339f069ddcdf",
+  "unicorn_revision": "8028ec436f2d9376525352dd38ed9ed6b9f6be10",
+  "emscripten_version": "5.0.7",
+  "emscripten_revision": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+  "generated_sha256": "258052b423b0e1c539432455b4bdf73509633904edfb0a863f9733aa54a71866",
+  "distributed_sha256": "426df7904c4cbe47b78360ad502ff8fc4b7850d86af663d7e0274a851dca08b8",
+  "build_patch_sha256": "f6aaf81fc3a50050765fab91070620d542bfe866b3d798f101b5c75a2ff67bba",
+  "adapter_sha256": "a8dac6f26531dd673a22231d56f7f0028c1e358b17020ea393dba1ac98815ce9",
+  "recipe": "distribution/native/unicorn-arm/README.md",
+  "archives": "distribution/native/unicorn-arm/SHA256SUMS",
+  "previous_runtime": "packages/firmware-checks/vendor/SOURCE.json",
+  "modifications": [
+    "Enable CONFIG_INT128 and sys/mman.h for Emscripten 5.0.7",
+    "Remove obsolete RESERVED_FUNCTION_POINTERS; fix build jobs to 4",
+    "Disable Node filesystem branch; append ESM default export; retain dated change notice"
+  ],
+  "reproduction_scope": "Two clean builds on macOS arm64 with the fixed toolchain; not cross-host reproducibility"
+}

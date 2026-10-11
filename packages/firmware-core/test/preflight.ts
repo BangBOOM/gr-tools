@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createFirmwareCore} from '../src/index.ts';
+const platform=JSON.parse(await readFile(new URL('../platform/platform.json',import.meta.url),'utf8')),wasmBytes=new Uint8Array(await readFile(new URL('../wasm/gr_firmware_core_bg.wasm',import.meta.url))).buffer;
+const core=await createFirmwareCore({platform,wasmBytes});
+await assert.rejects(()=>core.inspect(new ArrayBuffer(0)),/input size/);
+await assert.rejects(()=>core.inspect(new ArrayBuffer(32*1024*1024+1)),/input size/);
+assert.equal((await core.inspect(new ArrayBuffer(128))).supported,false);
+assert.equal((await core.plan(new ArrayBuffer(128),{profile:'unreviewed'} as any)).status,'FAIL');
+await assert.rejects(()=>core.build(new ArrayBuffer(128)),/blocked/);
+const changed=structuredClone(platform);delete changed.assets[Object.keys(changed.assets)[0]];await assert.rejects(()=>createFirmwareCore({platform:changed,wasmBytes}),/integrity pin/);
+const corrupt=wasmBytes.slice(0);new Uint8Array(corrupt)[100]^=1;await assert.rejects(()=>createFirmwareCore({platform,wasmBytes:corrupt}),/integrity pin/);
+console.log('PASS: bounded input, unknown base/profile, modified static platform and corrupted WASM fail closed');

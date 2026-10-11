@@ -1,0 +1,191 @@
+{
+  "schema": "gr-libraw-source-build-candidate/v1",
+  "status": "candidate-not-approved-for-public-release",
+  "target": "fresh pthread Web runtime; does not attest source match for existing 8947f7e668e488461c3e9defe7007583aa8477b4886aa603b36b407f2f0846ff",
+  "sources": {
+    "wrapper": {
+      "commit": "32fd36a9883a10c1632bc20073f1ea88cc60487a",
+      "version": "1.6.0",
+      "license_declaration": "ISC"
+    },
+    "LibRaw": {
+      "commit": "b860248a89d9082b8e0a1e202e516f46af9adb29",
+      "tag": "0.22.1",
+      "license_options": [
+        "LGPL-2.1",
+        "CDDL-1.0"
+      ],
+      "embedded_notices": "COPYRIGHT and per-file notices; dcraw/DCB/FBDD/X3F/Adobe DNG SDK"
+    },
+    "LittleCMS": {
+      "commit": "21c582a594fe5279f90c0b93437c398f93bf62b0",
+      "tag": "lcms2.19.1",
+      "license": "MIT",
+      "notice_file": "LICENSE"
+    },
+    "Emscripten": {
+      "commit": "263db4cffa6f9fc2ec514a70abac81362ea41849",
+      "version": "5.0.7",
+      "license": "MIT OR NCSA",
+      "runtime_additional_notices": [
+        "system/lib/libc/musl/COPYRIGHT",
+        "system/lib/libcxx/LICENSE.TXT",
+        "system/lib/libcxxabi/LICENSE.TXT",
+        "system/lib/compiler-rt/LICENSE.TXT",
+        "system/lib/libunwind/LICENSE.TXT"
+      ]
+    },
+    "JPEG": {
+      "version": "9f",
+      "source_archive": "jpeg-9f-source.tar.gz",
+      "license_notice": "README: LEGAL ISSUES; IJG terms",
+      "link_status": "final-link members extracted"
+    },
+    "libpng": {
+      "version": "1.6.55",
+      "source_archive": "libpng-1.6.55-source.tar.gz",
+      "license_notice": "LICENSE: PNG Reference Library License version 2",
+      "link_status": "requested/built; no final-link members extracted"
+    },
+    "zlib": {
+      "version": "1.3.1",
+      "source_archive": "zlib-1.3.1-source.tar.gz",
+      "license_notice": "README and zlib.h: zlib license",
+      "link_status": "requested/built; no final-link members extracted"
+    }
+  },
+  "archives": [
+    {
+      "file": "LibRaw-0.22.1-source.tar.gz",
+      "bytes": 603747,
+      "sha256": "377a6dc9fe4a0beb848ef84d3a4b153587f001f5dfdf3e062a97e9980ccbe2ed",
+      "under_25_mib": true
+    },
+    {
+      "file": "Little-CMS-2.19.1-source.tar.gz",
+      "bytes": 5725589,
+      "sha256": "fcb263f2e9389a4e000ed0c75f47a3d6f56268377338cd6122e6e41d99a4b626",
+      "under_25_mib": true
+    },
+    {
+      "file": "autoconf-2.72.tar.xz",
+      "bytes": 1389680,
+      "sha256": "ba885c1319578d6c94d46e9b0dceb4014caafe2490e437a0dbca3f270a223f5a",
+      "under_25_mib": true
+    },
+    {
+      "file": "automake-1.18.1.tar.xz",
+      "bytes": 1652392,
+      "sha256": "168aa363278351b89af56684448f525a5bce5079d0b6842bd910fdd3f1646887",
+      "under_25_mib": true
+    },
+    {
+      "file": "emscripten-5.0.7-compiler-source.tar.gz",
+      "bytes": 2249861,
+      "sha256": "198cf0cff764065bc09e7016525573db7eb16c644d0baf8857b17fb796beee9d",
+      "under_25_mib": true
+    },
+    {
+      "file": "emscripten-5.0.7-system-source.tar.gz",
+      "bytes": 6878026,
+      "sha256": "0b7cf16331f41baae422938545e24b2eb2f7e3967ec328f6272e52fd7cca51eb",
+      "under_25_mib": true
+    },
+    {
+      "file": "jpeg-9f-source.tar.gz",
+      "bytes": 1081470,
+      "sha256": "04705c110cb2469caa79fb71fba3d7bf834914706e9641a4589485c1f832565b",
+      "under_25_mib": true
+    },
+    {
+      "file": "libpng-1.6.55-source.tar.gz",
+      "bytes": 1573592,
+      "sha256": "4b0abab6d219e95690ebe4db7fc9aa95f4006c83baaa022373c0c8442271283d",
+      "under_25_mib": true
+    },
+    {
+      "file": "libraw-wasm-1.6.0-source.tar.gz",
+      "bytes": 38958,
+      "sha256": "1830708846cf4922ab3eb90a9a56f5f60dc072485f29f2be2bb3b1351a3eca42",
+      "under_25_mib": true
+    },
+    {
+      "file": "libtool-2.5.4.tar.xz",
+      "bytes": 1056924,
+      "sha256": "f81f5860666b0bc7d84baddefa60d1cb9fa6fceb2398cc3baca6afaa60266675",
+      "under_25_mib": true
+    },
+    {
+      "file": "m4-1.4.20.tar.xz",
+      "bytes": 2044756,
+      "sha256": "e236ea3a1ccf5f6c270b1c4bb60726f371fa49459a8eaaebc90b216b328daf2b",
+      "under_25_mib": true
+    },
+    {
+      "file": "pkgconf-2.5.1.tar.xz",
+      "bytes": 328064,
+      "sha256": "cd05c9589b9f86ecf044c10a2269822bc9eb001eced2582cfffd658b0a50c243",
+      "under_25_mib": true
+    },
+    {
+      "file": "zlib-1.3.1-source.tar.gz",
+      "bytes": 1572744,
+      "sha256": "17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c",
+      "under_25_mib": true
+    }
+  ],
+  "toolchain": {
+    "clang": "23.0.0git",
+    "llvm_commit": "7b58716d96c3ae4c0c4e6f72e29b16137bb6224b",
+    "binaryen": "129 (version_125-430-gc6a5e65b7)",
+    "emsdk_release": "6cd98e86d7749ff98b82b7f2ae78eb4f01942788"
+  },
+  "reproducibility": "all eight output files byte-identical in two independent same-host complete native builds; wrapper -ffile-prefix-map normalizes embind assertion paths",
+  "notes": [
+    "Build-time uv/Python/Node required; browser runtime does not require Python or Node.",
+    "No combined-license or software-IP clearance.",
+    "Compiler/tools source links do not establish complete corresponding source until source materials and notices are reviewed."
+  ],
+  "outputs": [
+    {
+      "file": "libraw-threaded/index.d.ts",
+      "bytes": 22062,
+      "sha256": "8ce4bced0b68d671cde222997617963f9622cdb1113d2cf9e76b1f5fe3cb7045"
+    },
+    {
+      "file": "libraw-threaded/index.js",
+      "bytes": 1557,
+      "sha256": "3eb710aa5473c58c3b9dec74457b2ad2095d15b9a6df0056c96a3a011b720ca6"
+    },
+    {
+      "file": "libraw-threaded/index.js.map",
+      "bytes": 5332,
+      "sha256": "91d4bd1662c683c4c9c9a0b17afde25789323bc88b281b9e6491660dd03bbba3"
+    },
+    {
+      "file": "libraw-threaded/libraw.js",
+      "bytes": 69155,
+      "sha256": "e23952fca5b268550af1f84619af5c0c035e5db3bde0e4d5a20300f1614a9487"
+    },
+    {
+      "file": "libraw-threaded/libraw.js.map",
+      "bytes": 239782,
+      "sha256": "704696e9121cea7e984ba8521974b00f23211e9b8369f84089a294f7a20b0178"
+    },
+    {
+      "file": "libraw-threaded/libraw.wasm",
+      "bytes": 1417661,
+      "sha256": "c74998bf9d1d7100c418bf94e65153323f44b4c0e1d97490ef69af029fae0c3a"
+    },
+    {
+      "file": "libraw-threaded/worker.js",
+      "bytes": 69537,
+      "sha256": "af074781439ddf9c47fcbd3b3f115049ab884fdf61ec49ab358f28a8c42a4d4c"
+    },
+    {
+      "file": "libraw-threaded/worker.js.map",
+      "bytes": 241382,
+      "sha256": "17c1dea1f219f6e1634270413b1bd6823a86f645513285e3bb56eb06fd06f54c"
+    }
+  ]
+}

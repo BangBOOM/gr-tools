@@ -1,0 +1,35 @@
+diff --git a/build.py b/build.py
+index 367b153..a6f61ed 100644
+--- a/build.py
++++ b/build.py
+@@ -1,4 +1,5 @@
+ #!/usr/bin/env python3
++# GR Tools modifications, 2026-10-09: Emscripten 5.0.7 header flags; remove obsolete setting; fixed build jobs.
+ 
+ import json
+ import os
+@@ -191,6 +192,7 @@ def compileUnicorn(archs=[]):
+         '-B', UNICORN_BUILD_DIR,
+         '-S', UNICORN_DIR,
+         '-DCMAKE_BUILD_TYPE=Release',
++        '-DCMAKE_C_FLAGS=-DCONFIG_INT128 -include sys/mman.h',
+         '-DBUILD_SHARED_LIBS=OFF',
+         '-DUNICORN_ARCH=' + ';'.join(targets),
+         '-DUNICORN_BUILD_TESTS=OFF',
+@@ -200,7 +202,7 @@ def compileUnicorn(archs=[]):
+     ], check=True)
+ 
+     # Build the static library
+-    jobs = os.cpu_count() or 1
++    jobs = 4
+     cmd = ['emmake', 'cmake', '--build', UNICORN_BUILD_DIR, '--target', 'unicorn_archive', f'-j{jobs}']
+     subprocess.run(cmd, check=True)
+ 
+@@ -215,7 +217,6 @@ def compileUnicorn(archs=[]):
+         os.path.join(UNICORN_BUILD_DIR, 'libunicorn.a'),
+         '-s', f"EXPORTED_FUNCTIONS={EXPORTED_FUNCTIONS}",
+         '-s', f"EXPORTED_RUNTIME_METHODS={methods}",
+-        '-s', 'RESERVED_FUNCTION_POINTERS=256',
+         '-s', 'ALLOW_TABLE_GROWTH=1',
+         '-s', 'ALLOW_MEMORY_GROWTH=1',
+         '-s', 'MODULARIZE=1',

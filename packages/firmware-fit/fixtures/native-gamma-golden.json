@@ -1,0 +1,32 @@
+{
+  "schema": "gr-native-gamma-full-scalar-golden/v1",
+  "source_sha256": "53da690797f35ad6dc2c429d8ca1d0de8e333c211ed959816813982cd093b703",
+  "scalar_sha256": "eaed6ba7fcee7cdc2dd008f9c9cf746253da89929ca7e92d31aa317dceefd406",
+  "model_sha256": "442b0531d9084596247107b4b7cc06c776e172dec35a22f00f748e531fb5c321",
+  "exposure": 8832,
+  "flag": 0,
+  "key_order": [
+    "key",
+    "contrast",
+    "highlight",
+    "shadow"
+  ],
+  "knob_values": [
+    -4,
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "cases": 6561,
+  "curve_nodes": 256,
+  "aggregate_u16le_sha256": "ab21f53ab4f06b9f35dd2dfdccdf89fa4ef1d931abd7e7dac3f38a6e07fcabca",
+  "monotone_cases": 6561,
+  "minimum_q14": 0,
+  "maximum_q14": 16384,
+  "scope": "6561 isolated scalar model outputs; independent instruction corners separately frozen; not 6561 ARM or real camera checks"
+}
